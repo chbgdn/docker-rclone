@@ -1,0 +1,18 @@
+version: "3"
+services:
+  rclone:
+    image: chbgdn/rclone:latest
+    restart: unless-stopped
+    volumes:
+      - ./config:/config
+      - /directory/for/backup:/source
+    environment:
+      - "UID=1000"
+      - "GID=1000"
+      - "TZ=Europe/Kyiv"
+      - "RCLONE_CMD=sync" # sync/copy/move
+      - "SYNC_SRC=/source" # source directory path
+      - "SYNC_DEST=myremote:path/to/dir" # destination for rclone
+      - "CRON=0 0 * * *" # perform sync every midnight (supprorts cron shortcuts)
+      - "CRON_ABORT=0 6 * * *" # abort sync at 6am
+      - "FORCE_SYNC=1" # perform a sync upon boot
